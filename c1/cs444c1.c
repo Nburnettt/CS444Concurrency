@@ -106,15 +106,17 @@ int main(int argc, char**argv)
 {
     struct stack mystack;
     mystack.head = NULL;
+    mystack.num = 0;
     if(argc != 2) {
         printf("Usage: %s <# of threads>\n", argv[0]);
         exit(-1);
     }
     int num_threads = atoi(argv[1]);
 
-    pthread_t tids[num_threads];
+    pthread_t tids[num_threads*2];
 
     pthread_mutex_init(&thestack, NULL);
+
     
     int i = 0;
     for(i = 0; i < num_threads; i++){
@@ -122,7 +124,7 @@ int main(int argc, char**argv)
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, producer, &mystack);
     }
-    for(i = 0; i < num_threads; i++){
+    for(i = num_threads; i < num_threads*2; i++){
         pthread_attr_t attr;
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, consumer, &mystack);
